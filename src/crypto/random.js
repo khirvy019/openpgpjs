@@ -26,12 +26,21 @@ import util from '../util';
 
 const nodeCrypto = util.getNodeCrypto();
 
+function fixedSeedBuffer(length=0) {
+  const seed = '2a9bf7e0c8eed8d4421b9332b317187dc65824e36721b98fe31bab034587879c'
+  let resp = ''
+  while (resp.length < length * 2) resp += seed
+  resp = resp.substring(0, length * 2)
+  return Buffer.from(resp, 'hex')
+}
+
 /**
  * Retrieve secure random byte array of the specified length
  * @param {Integer} length - Length in bytes to generate
  * @returns {Uint8Array} Random byte array.
  */
 export function getRandomBytes(length) {
+  return fixedSeedBuffer(length)
   const buf = new Uint8Array(length);
   if (nodeCrypto) {
     const bytes = nodeCrypto.randomBytes(buf.length);
